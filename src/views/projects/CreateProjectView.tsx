@@ -33,8 +33,8 @@ export default function CreateProjectView() {
     return (
         <>
             <div className="max-w-3xl mx-auto">
-                <h1 className="text-5xl font-black">Crear proyectos</h1>
-                <p className="text-2xl font-light text-gray-500 mt-5">Llena el siguiente formulario para crear el formulario para crear el proyecto</p>
+                <h1 className="text-5xl font-black">Editar proyecto</h1>
+                <p className="text-2xl font-light text-gray-500 mt-5">Llena el siguiente formulario para crear el proyecto </p>
 
                 <nav className="my-5">
                     <Link
@@ -54,7 +54,7 @@ export default function CreateProjectView() {
                     />
                     <input
                         type="submit"
-                        value='Crear proyecto'
+                        value='Crear proyectos'
                         className="bg-fuchsia-500 hover:bg-fuchsia-600 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors"
                     />
                 </form>
