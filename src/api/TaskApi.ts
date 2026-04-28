@@ -31,3 +31,15 @@ export async function getTaskById({projectId, editTaskId}: Pick<TaskAPI, 'projec
         }
     }
 }
+
+export async function updateTask({projectId,editTaskId, formData}: Pick<TaskAPI, 'projectId' | 'editTaskId' | 'formData'>) {
+    try {
+        const url = `/projects/${projectId}/tasks/${editTaskId}`
+        const {data} = await api.put<string>(url, formData)
+        return data
+    } catch (error) {
+        if(isAxiosError(error) && error.response){
+            throw new Error(error.response.data.error)
+        }
+    }
+}
