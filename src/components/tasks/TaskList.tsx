@@ -1,17 +1,11 @@
 import type { Task } from "@/types"
 import TaskCard from "./TaskCard"
+import { statusTranslation } from "@/locales/en"
 
 type TaskListProps = {
   tasks: Task[]
 }
 
-const statusTranslation : {[key: string] : string} = {
-  pending: 'Pending',
-  on_hold: 'On Hold',
-  in_pogress: 'In Progress',
-  under_review: 'Under Review',
-  complete: 'Complete'
-}
 
 const statusStyles : {[key: string] : string} = {
   pending: 'border-t-slate-500',

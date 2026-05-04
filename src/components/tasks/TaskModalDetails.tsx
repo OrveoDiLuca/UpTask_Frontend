@@ -1,17 +1,33 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { useLocation, useNavigate } from 'react-router-dom';
-
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { getTaskById } from '@/api/TaskApi';
+import { toast } from 'react-toastify';
+import { statusTranslation } from '@/locales/en';
 
 export default function TaskModalDetails() {
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
-    const taskId = queryParams.get('viewTask')
+    const editTaskId = queryParams.get('viewTask')!
     const navigate = useNavigate()
+    const params = useParams()
+    const projectId = params.projectId!
+    const show = editTaskId ? true : false
 
-    const show = taskId ? true : false
+    const {data, isError, error} = useQuery({
+        queryKey: ['project', editTaskId], 
+        queryFn: () => getTaskById({projectId, editTaskId}),
+        enabled: !!editTaskId,
+        retry: false
+    })
     
-    return (
+    if(isError){
+        toast.error(error.message, {toastId:'error'})
+        return <Navigate to={`/projects/${projectId}`}/>
+    }
+    
+    if(data) return (
         <>
             <Transition appear show={show} as={Fragment}>
                 <Dialog as="div" className="relative z-10" onClose={() => navigate(location.pathname, {replace: true})}>
@@ -39,16 +55,26 @@ export default function TaskModalDetails() {
                                 leaveTo="opacity-0 scale-95"
                             >
                                 <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all p-16">
-                                    <p className='text-sm text-slate-400'>Agregada el: </p>
-                                    <p className='text-sm text-slate-400'>Última actualización: </p>
+                                    <p className='text-sm text-slate-400'>Agregada el: <span className='font-bold'>{new Date(data.createdAt).toLocaleDateString('es-ES', {year:'numeric', month:'long', day:'numeric'})}</span></p>
+                                    <p className='text-sm text-slate-400'>Última actualización: <span className='font-bold'>{new Date(data.updatedAt).toLocaleDateString('es-ES', {year:'numeric', month:'long', day:'numeric'})}</span></p>
                                     <Dialog.Title
                                         as="h3"
                                         className="font-black text-4xl text-slate-600 my-5"
-                                    >Titulo aquí
+                                    >{data.name}
                                     </Dialog.Title>
-                                    <p className='text-lg text-slate-500 mb-2'>Descripción:</p>
+                                    <p className='text-lg text-slate-500 mb-2'>Descripción: {data.description}</p>
                                     <div className='my-5 space-y-3'>
-                                        <label className='font-bold'>Estado Actual:</label>
+                                        <label className='font-bold'>Estado Actual: </label>
+                                        <select
+                                            className='w-full p-3 bg-white border border-gray-300'
+                                            defaultValue={data.status}
+                                        >
+                                            {Object.entries(statusTranslation).map(([key,value]) => (
+                                                <option key={key} value={key}>
+                                                    {value}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                 </Dialog.Panel>
                             </Transition.Child>
