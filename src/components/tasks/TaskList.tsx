@@ -10,7 +10,7 @@ type TaskListProps = {
 const statusStyles : {[key: string] : string} = {
   pending: 'border-t-slate-500',
   on_hold: 'border-t-red-500',
-  in_pogress: 'border-t-blue-500',
+  in_progress: 'border-t-blue-500',
   under_review: 'border-t-amber-500',
   complete: 'border-t-emerald-500'
 }
@@ -22,7 +22,7 @@ type GroupedTasks = {
 const initialStatusGroups: GroupedTasks = {
   pending: [],
   on_hold: [],
-  in_pogress: [],
+  in_progress: [],
   under_review: [],
   complete: []
 }

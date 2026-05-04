@@ -6,6 +6,7 @@ type TaskAPI = {
     formData: TaskFormData
     projectId: Project['_id']
     editTaskId: Task['_id']
+    status: Task['status']
 }
 
 export async function createTask({formData, projectId}: Pick<TaskAPI, 'formData' | 'projectId'>) {
@@ -51,6 +52,18 @@ export async function deleteTask({projectId, editTaskId}: Pick<TaskAPI, 'project
     try {
         const url = `/projects/${projectId}/tasks/${editTaskId}`
         const {data} = await api.delete<string>(url)
+        return data
+    } catch (error) {
+        if(isAxiosError(error) && error.response){
+            throw new Error(error.response.data.error)
+        }
+    }
+}
+
+export async function updateTaskStatus({projectId, editTaskId, status}: Pick<TaskAPI, 'projectId' | 'editTaskId' | 'status'>) {
+    try {
+        const url = `/projects/${projectId}/tasks/${editTaskId}/status`
+        const {data} = await api.patch<string>(url, {status})
         return data
     } catch (error) {
         if(isAxiosError(error) && error.response){
