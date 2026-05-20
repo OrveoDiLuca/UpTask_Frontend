@@ -1,14 +1,15 @@
 import AddMemberModal from "@/components/team/AddMemberModal"
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom"
-import { useQuery } from "@tanstack/react-query"
-import { getTeamMembers } from "@/api/TeamApi"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { getTeamMembers, removeUserFromProject } from "@/api/TeamApi"
 import { Fragment } from "react/jsx-runtime"
 import { Menu, Transition } from "@headlessui/react"
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid" 
+import { toast } from "react-toastify"
 
 
 export default function ProjectViewTeam() {
-
+    const queryClient = useQueryClient()
     const navigate = useNavigate()
     const params = useParams()
     const projectId = params.projectId!
@@ -18,6 +19,18 @@ export default function ProjectViewTeam() {
         queryFn: () => getTeamMembers(projectId),
         retry: false
     })
+
+    const {mutate} = useMutation({
+        mutationFn: removeUserFromProject,
+        onError: (error) => {
+            toast.error(error.message)
+        },
+        onSuccess: (data) => {
+            toast.success(data)
+            queryClient.invalidateQueries({queryKey:['projectTeam', projectId] })
+        }
+    })
+
 
     if (isLoading) return 'Cargando...'
     if (isError) return <Navigate to='/404' />
@@ -76,6 +89,7 @@ export default function ProjectViewTeam() {
                                                 <button
                                                     type='button'
                                                     className='block px-3 py-1 text-sm leading-6 text-red-500'
+                                                    onClick={() => mutate({projectId, userId: member._id})}
                                                 >
                                                     Eliminar del Proyecto
                                                 </button>
