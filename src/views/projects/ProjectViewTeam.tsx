@@ -1,3 +1,4 @@
+import AddMemberModal from "@/components/team/AddMemberModal"
 import { Link, useNavigate, useParams } from "react-router-dom"
 
 
@@ -26,6 +27,8 @@ export default function ProjectViewTeam() {
                     Volver al proyecto
                 </Link>
             </nav>
+
+            <AddMemberModal/>
         </>
   )
 }
