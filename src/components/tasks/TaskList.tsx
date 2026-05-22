@@ -3,7 +3,8 @@ import TaskCard from "./TaskCard"
 import { statusTranslation } from "@/locales/en"
 
 type TaskListProps = {
-  tasks: Task[]
+  tasks: Task[],
+  canEdit: boolean
 }
 
 
@@ -27,7 +28,7 @@ const initialStatusGroups: GroupedTasks = {
   complete: []
 }
 
-export default function TaskList({ tasks }: TaskListProps) {
+export default function TaskList({ tasks, canEdit }: TaskListProps) {
 
   const groupedTasks = tasks.reduce((acc, task) => {
     let currentGroup = acc[task.status] ? [...acc[task.status]] : [];
@@ -53,7 +54,7 @@ export default function TaskList({ tasks }: TaskListProps) {
               {tasks.length === 0 ? (
                 <li className="text-gray-500 text-center pt-3">No Hay tareas</li>
               ) : (
-                tasks.map(task => <TaskCard key={task._id} task={task} />)
+                tasks.map(task => <TaskCard key={task._id} task={task} canEdit={canEdit}/>)
               )}
             </ul>
           </div>
