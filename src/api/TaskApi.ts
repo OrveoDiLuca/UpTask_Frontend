@@ -29,6 +29,7 @@ export async function getTaskById({projectId, editTaskId}: Pick<TaskAPI, 'projec
         if(response.success){
             return response.data
         }
+        throw new Error('Invalid task data')
     } catch (error) {
         if(isAxiosError(error) && error.response){
             throw new Error(error.response.data.error)
