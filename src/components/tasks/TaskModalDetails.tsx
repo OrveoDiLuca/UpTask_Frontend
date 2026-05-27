@@ -17,7 +17,7 @@ export default function TaskModalDetails() {
     const projectId = params.projectId!
     const show = editTaskId ? true : false
 
-    const { data, isError, error } = useQuery({
+    const { data, isError } = useQuery({
         queryKey: ['project', editTaskId],
         queryFn: () => getTaskById({ projectId, editTaskId }),
         enabled: !!editTaskId,
